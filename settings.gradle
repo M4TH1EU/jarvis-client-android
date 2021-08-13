@@ -1,0 +1,2 @@
+include ':porcupine'
+include ':jarvis-client-app'
