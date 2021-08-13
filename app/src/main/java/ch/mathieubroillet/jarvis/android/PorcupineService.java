@@ -36,13 +36,12 @@ public class PorcupineService extends Service {
                             getApplicationContext(),
                             (keywordIndex) -> {
 
-
-                                Intent dialogIntent = new Intent(getBaseContext(), ListeningActivity.class);
+                                Intent dialogIntent = new Intent(this, ListeningActivity.class);
                                 dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(dialogIntent);
 
 
-                                Toast.makeText(this, "Jarvis detecté", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(this, "Wake-word detected!", Toast.LENGTH_SHORT).show();
                             });
             porcupineManager.start();
         } catch (PorcupineException e) {
