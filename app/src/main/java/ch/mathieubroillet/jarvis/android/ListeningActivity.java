@@ -3,6 +3,7 @@ package ch.mathieubroillet.jarvis.android;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
 import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,5 +30,9 @@ public class ListeningActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_listening);
 
+    }
+
+    public void quit(View view) {
+        finish();
     }
 }

@@ -22,11 +22,8 @@
             android:enabled="true"
             android:exported="false"/>
 
-        <activity
-            android:name=".ListeningActivity"
-            android:exported="true"
-            android:label="Listening"
-            android:theme="@style/Theme.AppCompat.Transparent.NoActionBar"/>
+        <activity android:name=".ListeningActivity"
+            android:theme="@style/Theme.Transparent" />
 
         <activity android:name=".Main"
             android:exported="false">
