@@ -42,11 +42,11 @@ public class Main extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         if (!hasPermissions()) {
-            Toast.makeText(this, "No pemerssions, accept all permissions and restart app.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Missing permissions, accept all permissions and restart app.", Toast.LENGTH_SHORT).show();
 
             requestPermissions();
-        } else {
-            startService();
         }
+
+        startService();
     }
 }
