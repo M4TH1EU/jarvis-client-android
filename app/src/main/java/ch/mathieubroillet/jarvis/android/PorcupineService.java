@@ -36,7 +36,8 @@ public class PorcupineService extends Service {
                             getApplicationContext(),
                             (keywordIndex) -> {
 
-                                Intent dialogIntent = new Intent(this, ListeningActivity.class);
+                                Intent dialogIntent = new Intent(getApplicationContext(), ListeningActivity.class);
+                                dialogIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(dialogIntent);
 

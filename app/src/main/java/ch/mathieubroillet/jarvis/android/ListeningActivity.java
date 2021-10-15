@@ -35,4 +35,19 @@ public class ListeningActivity extends AppCompatActivity {
     public void quit(View view) {
         finish();
     }
+
+    public void startRecording(View view) {
+        view.setVisibility(View.INVISIBLE);
+
+        View dots = findViewById(R.id.dots);
+        dots.setVisibility(View.VISIBLE);
+
+    }
+
+    public void stopRecording(View view) {
+        view.setVisibility(View.INVISIBLE);
+
+        View dots = findViewById(R.id.microphone);
+        dots.setVisibility(View.VISIBLE);
+    }
 }
