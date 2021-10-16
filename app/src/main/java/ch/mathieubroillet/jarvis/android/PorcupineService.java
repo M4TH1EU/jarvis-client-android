@@ -41,7 +41,6 @@ public class PorcupineService extends Service {
                                 dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(dialogIntent);
 
-
                                 Toast.makeText(this, "Wake-word detected!", Toast.LENGTH_SHORT).show();
                             });
             porcupineManager.start();
