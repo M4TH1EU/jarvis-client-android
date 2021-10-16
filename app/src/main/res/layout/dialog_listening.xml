@@ -84,7 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="223dp"
-            android:onClick="stopRecording"
+            android:onClick="onClickRecordingDots"
             android:visibility="invisible"
             app:loader_animDur="250"
             app:loader_circleRadius="10dp"
@@ -104,7 +104,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="205dp"
             android:contentDescription="microphone"
-            android:onClick="startRecording"
+            android:onClick="onClickMicrophone"
             app:srcCompat="@drawable/microphone"
             tools:ignore="OnClick" />
 
