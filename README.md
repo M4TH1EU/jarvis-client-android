@@ -1,4 +1,4 @@
-# jarvis-client-android
+# Jarvis Client for Android 10+
 Android Client for Jarvis
 
 This client is absolutely not ready to use but is under heavy development. (WIP)
