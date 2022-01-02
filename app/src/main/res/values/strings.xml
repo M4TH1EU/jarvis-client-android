@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Jarvis Client Android</string>
+    <string name="app_name">Jarvis</string>
     <string name="listening">J\'écoute…</string>
     <string name="imjarvis">Salut, je suis Jarvis.</string>
     <string name="howcanihelp">Dis moi comment je peux t\'aider.</string>
