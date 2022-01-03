@@ -18,18 +18,29 @@ import ch.mathieubroillet.jarvis.android.ui.theme.productSansFont
 
 
 @Composable
-fun MessageFromJarvis(text: String) {
+fun MessageFromJarvis(
+    text: String,
+    anotherMessageFollows: Boolean = false,
+    showProfileIcon: Boolean = true
+) {
     //We create a row to contain the message and the robot image (to look like an sms)
-    Row(Modifier.padding(bottom = 25.dp)) {
+    Row(
+        Modifier.padding(
+            bottom = if (anotherMessageFollows) 5.dp else 20.dp,
+            start = if (!showProfileIcon) 50.dp else 0.dp
+        )
+    ) {
 
         // Adding the robot image as the sender
-        Image(
-            painter = painterResource(id = R.drawable.robot256),
-            contentDescription = "robot",
-            Modifier
-                .size(50.dp)
-                .padding(end = 10.dp)
-        )
+        if (showProfileIcon) {
+            Image(
+                painter = painterResource(id = R.drawable.robot256),
+                contentDescription = "robot",
+                Modifier
+                    .size(50.dp)
+                    .padding(end = 10.dp)
+            )
+        }
 
         // Adding the message box with the text given in the params
         Box(
@@ -37,10 +48,36 @@ fun MessageFromJarvis(text: String) {
                 .fillMaxWidth(fraction = 0.9F)
                 .clip(RoundedCornerShape(15.dp))
                 .background(color = MaterialTheme.colors.secondaryVariant)
-                .padding(horizontal = 10.dp, vertical = 5.dp)
+                .padding(horizontal = 10.dp, vertical = 10.dp)
         ) {
             Text(text = text, fontFamily = productSansFont)
         }
+    }
+}
+
+@Composable
+fun MessageFromJarvis(texts: List<String>) {
+    //Automated function to send multiples messages at the same time but only showing the profile pic in the first one and reducing the padding between them.
+    var i = texts.size
+    for (text in texts) {
+        when (i) {
+            texts.size -> MessageFromJarvis(
+                text = text,
+                anotherMessageFollows = true,
+                showProfileIcon = true
+            )
+            1 -> MessageFromJarvis(
+                text = text,
+                anotherMessageFollows = false,
+                showProfileIcon = false
+            )
+            else -> MessageFromJarvis(
+                text = text,
+                anotherMessageFollows = true,
+                showProfileIcon = false
+            )
+        }
+        i--
     }
 }
 
