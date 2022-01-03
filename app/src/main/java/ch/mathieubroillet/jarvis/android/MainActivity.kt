@@ -70,7 +70,7 @@ fun Base() {
             text = "Bonjour, comment puis-je vous aider ?",
             fontFamily = productSansFont,
             fontSize = 30.sp,
-            modifier = Modifier.padding(top = 50.dp)
+            modifier = Modifier.padding(top = 30.dp)
         )
     }
 }
@@ -157,8 +157,8 @@ fun DefaultPreview() {
             Modifier
                 .fillMaxHeight()
                 .fillMaxWidth()
-                .padding(horizontal = 20.dp)
-                .padding(top = 30.dp, bottom = 0.dp)
+                .padding(horizontal = 15.dp)
+                .padding(top = 45.dp, bottom = 0.dp)
         ) {
 
             // This column regroup the base and all the conversations (everything except the footer)
