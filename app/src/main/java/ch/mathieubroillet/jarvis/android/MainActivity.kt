@@ -22,7 +22,6 @@ import ch.mathieubroillet.jarvis.android.ui.theme.JarvisComposeTheme
 
 class MainActivity : ComponentActivity() {
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
