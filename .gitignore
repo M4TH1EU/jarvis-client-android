@@ -12,6 +12,8 @@
 
 .idea/**
 .idea/
+.idea/*
+.idea/misc.xml
 
 # Generated files
 bin/
@@ -86,5 +88,3 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
-
-.idea/
