@@ -1,3 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Jarvis Compose</string>
+    <string name="app_name" translatable="false">Jarvis</string>
+    <string name="permissions_page_grant_permission">Grant</string>
+    <string name="permissions_page_permission_denied">Denied</string>
+    <string name="permission_granted">Granted</string>
+    <string name="permissions_page_permissions_page_before_starting">Before you begin</string>
+    <string name="main_page_dialog_ask_me_anything">Ask me anything</string>
+    <string name="main_page_dialog_type_a_sentence">Type something here</string>
+    <string name="main_page_how_may_i_help_you">Hi, how can I help ?</string>
+    <string name="main_page_delete_conversation">Delete conversation</string>
+    <string name="settings">Settings</string>
+    <string name="report_an_issue">Report an issue</string>
+    <string name="demo_message_1">Hi, I\'m Jarvis! \nAsk me anything and I\'ll do my best to help you.</string>
+    <string name="demo_message_2">What\'s the weather like in Paris ?</string>
+    <string name="demo_message_3">In Paris it\'s cloudy and the temperature is 10 degrees celsuis</string>
+    <string name="permissions_page_this_app_need_the_following_permissions">The following permissions are required for this application to run:</string>
+    <string name="permissions_microphone">Microphone</string>
+    <string name="permissions_microphone_description">Necessary to hear you</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
 </resources>

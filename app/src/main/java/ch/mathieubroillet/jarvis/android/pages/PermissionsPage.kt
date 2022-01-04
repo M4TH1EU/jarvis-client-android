@@ -1,13 +1,14 @@
 package ch.mathieubroillet.jarvis.android.pages
 
+import android.Manifest
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -17,6 +18,7 @@ import ch.mathieubroillet.jarvis.android.R
 import ch.mathieubroillet.jarvis.android.ui.theme.JarvisComposeTheme
 import ch.mathieubroillet.jarvis.android.ui.theme.productSansFont
 import ch.mathieubroillet.jarvis.android.utils.DefaultBox
+import ch.mathieubroillet.jarvis.android.utils.requestPermission
 
 
 @Composable
@@ -37,19 +39,23 @@ fun PermissionsBase(navController: NavController) {
             )
         }
         Text(
-            text = "Avant de commencer",
+            text = stringResource(id = R.string.permissions_page_permissions_page_before_starting),
             fontFamily = productSansFont,
             fontSize = 30.sp,
             modifier = Modifier.padding(top = 15.dp)
         )
         Text(
-            text = "Cette application a besoin des autorisations suivantes pour fonctionner :",
+            text = stringResource(id = R.string.permissions_page_this_app_need_the_following_permissions),
             fontFamily = productSansFont,
             fontSize = 20.sp,
             modifier = Modifier.padding(top = 10.dp)
         )
 
-        PermissionRow(R.drawable.ic_baseline_mic_24, "Microphone", "Nécessaire pour vous entendre.")
+        PermissionRow(
+            R.drawable.ic_baseline_mic_24,
+            stringResource(id = R.string.permissions_microphone),
+            stringResource(id = R.string.permissions_microphone_description)
+        )
     }
 }
 
@@ -83,9 +89,7 @@ fun PermissionRow(
                 fontSize = 14.sp
             )
         }
-        Button(onClick = { /*TODO*/ }) {
-            Text(text = "Autoriser")
-        }
+        requestPermission(permission = Manifest.permission.RECORD_AUDIO)
     }
 }
 

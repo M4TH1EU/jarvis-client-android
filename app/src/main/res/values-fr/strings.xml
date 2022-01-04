@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permissions_page_grant_permission">Autoriser</string>
+    <string name="permissions_page_permission_denied">Refusée</string>
+    <string name="permission_granted">Autorisé</string>
+    <string name="permissions_page_permissions_page_before_starting">Avant de commencer</string>
+    <string name="main_page_dialog_ask_me_anything">Demandez-moi quelque chose</string>
+    <string name="main_page_dialog_type_a_sentence">Entrez une phrase</string>
+    <string name="main_page_delete_conversation">Effacer la conversation</string>
+    <string name="main_page_how_may_i_help_you">Bonjour, comment puis-je vous aider ?</string>
+    <string name="settings">Paramètres</string>
+    <string name="report_an_issue">Signaler un problème</string>
+    <string name="demo_message_1">Salut, je suis Jarvis! \nPose moi une question et je ferais de mon mieux pour te renseigner.</string>
+    <string name="demo_message_2">Quel temps fait-il à Paris en ce moment ?</string>
+    <string name="demo_message_3">A Paris, il fait actuellement 10 degrés et le ciel est nuageux.</string>
+    <string name="permissions_page_this_app_need_the_following_permissions">Cette application a besoin des autorisations suivantes pour fonctionner:</string>
+    <string name="permissions_microphone">Microphone</string>
+    <string name="permissions_microphone_description">Nécessaire pour vous entendre</string>
+    <string name="cancel">Annuler</string>
+    <string name="ok">OK</string>
+</resources>

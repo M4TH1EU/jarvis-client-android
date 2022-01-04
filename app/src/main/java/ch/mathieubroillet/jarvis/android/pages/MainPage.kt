@@ -7,6 +7,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
@@ -27,20 +28,20 @@ import ch.mathieubroillet.jarvis.android.utils.MessageFromUser
 @Composable
 fun Base(navController: NavController) {
 
-    Column(Modifier.padding(bottom = 25.dp)) {
+    Column(Modifier.padding(bottom = 25.dp).fillMaxWidth()) {
         Row(Modifier.align(Alignment.End)) {
 
             IconAlertDialogTextField(
                 R.drawable.ic_baseline_keyboard_24,
-                "Demandez-moi quelque chose",
-                "Entrez une phrase"
+                stringResource(id = R.string.main_page_dialog_ask_me_anything),
+                stringResource(id = R.string.main_page_dialog_type_a_sentence)
             )
 
             DropDownSettingsMenu(navController)
         }
 
         Text(
-            text = "Bonjour, comment puis-je vous aider ?",
+            text = stringResource(id = R.string.main_page_how_may_i_help_you),
             fontFamily = productSansFont,
             fontSize = 30.sp,
             modifier = Modifier.padding(top = 30.dp)
@@ -65,15 +66,15 @@ fun DropDownSettingsMenu(navController: NavController) {
         onDismissRequest = { expanded = false },
         offset = DpOffset((-500).dp, 0.dp)
     ) {
-        DropdownMenuItem(onClick = { /* Handle refresh! */ }) {
-            Text("Effacer la conversation")
+        DropdownMenuItem(onClick = { navController.navigate(Screen.PermissionsScreen.route) }) {
+            Text(stringResource(id = R.string.main_page_delete_conversation))
         }
         DropdownMenuItem(onClick = { navController.navigate(Screen.SettingsScreen.route) }) {
-            Text("Paramètres")
+            Text(stringResource(id = R.string.settings))
         }
         Divider()
         DropdownMenuItem(onClick = { /* Handle send feedback! */ }) {
-            Text("Signaler un problème")
+            Text(stringResource(id = R.string.report_an_issue))
         }
     }
 }
@@ -110,9 +111,9 @@ fun DisplayMainPage(navController: NavController) {
             LazyColumn(content = {
                 item {
                     // Basic interaction stuff for demo
-                    MessageFromJarvis(text = "Salut, je suis Jarvis! \nPose moi une question et je ferais de mon mieux pour te renseigner.")
-                    MessageFromUser(text = "Quel temps fait-il à Paris en ce moment ?")
-                    MessageFromJarvis(text = "A Paris, il fait actuellement 10 degrés et le ciel est nuageux.")
+                    MessageFromJarvis(text = stringResource(id = R.string.demo_message_1))
+                    MessageFromUser(text = stringResource(id = R.string.demo_message_2))
+                    MessageFromJarvis(text = stringResource(id = R.string.demo_message_3))
                 }
             })
         }

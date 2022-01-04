@@ -9,10 +9,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ch.mathieubroillet.jarvis.android.R
+import ch.mathieubroillet.jarvis.android.ui.theme.JarvisComposeTheme
 import ch.mathieubroillet.jarvis.android.ui.theme.productSansFont
 
 @Composable
@@ -21,7 +23,7 @@ fun IconAlertDialogTextField(
     title: String = "Title",
     label: String = "Label"
 ) {
-    MaterialTheme {
+    JarvisComposeTheme {
         Column {
             val openDialog = remember { mutableStateOf(false) }
 
@@ -43,12 +45,13 @@ fun IconAlertDialogTextField(
                     title = null,
                     text = null,
                     buttons = {
-                        Column(Modifier.fillMaxWidth()) {
+                        Column {
                             Box(
                                 modifier = Modifier
                                     .clip(RectangleShape)
                                     .background(color = MaterialTheme.colors.secondaryVariant)
                                     .padding(horizontal = 20.dp, vertical = 15.dp)
+                                    .fillMaxWidth()
                             ) {
                                 Text(
                                     text = title,
@@ -62,6 +65,7 @@ fun IconAlertDialogTextField(
                                     .background(color = MaterialTheme.colors.background)
                                     .padding(horizontal = 20.dp)
                                     .padding(top = 15.dp, bottom = 10.dp)
+                                    .fillMaxWidth()
                             ) {
                                 Column {
                                     var text by remember { mutableStateOf(TextFieldValue("")) }
@@ -85,13 +89,13 @@ fun IconAlertDialogTextField(
                                     ) {
                                         TextButton(onClick = { openDialog.value = false }) {
                                             Text(
-                                                text = "Annuler",
+                                                text = stringResource(id = R.string.cancel),
                                                 color = MaterialTheme.colors.secondary
                                             )
                                         }
                                         TextButton(onClick = { /*TODO*/ }) {
                                             Text(
-                                                text = "OK",
+                                                text = stringResource(id = R.string.ok),
                                                 color = MaterialTheme.colors.secondary
                                             )
                                         }
