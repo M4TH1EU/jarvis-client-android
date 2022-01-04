@@ -14,14 +14,14 @@ import com.google.accompanist.permissions.rememberPermissionState
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun requestPermission(permission: String) {
-    val cameraPermissionState = rememberPermissionState(permission = permission)
+    val permissionState = rememberPermissionState(permission = permission)
     val context = LocalContext.current
 
     PermissionRequired(
-        permissionState = cameraPermissionState,
+        permissionState = permissionState,
         permissionNotGrantedContent = {
             Button(onClick = {
-                cameraPermissionState.launchPermissionRequest()
+                permissionState.launchPermissionRequest()
             }) {
                 Text(text = stringResource(id = R.string.permissions_page_grant_permission))
             }

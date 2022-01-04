@@ -30,7 +30,11 @@ fun DisplayPermissionsPage(navController: NavController) {
 
 @Composable
 fun PermissionsBase(navController: NavController) {
-    Column(Modifier.padding(bottom = 25.dp)) {
+    Column(
+        Modifier
+            .padding(bottom = 25.dp)
+            .fillMaxSize()
+    ) {
         Row {
             Icon(
                 painter = painterResource(id = R.drawable.ic_baseline_shield_24),
