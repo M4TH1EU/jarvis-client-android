@@ -78,6 +78,7 @@ fun IconAlertDialogTextField(
                             ) {
                                 Column {
                                     val (focusRequester) = FocusRequester.createRefs()
+
                                     OutlinedTextField(
                                         value = text,
                                         onValueChange = textFieldValue,
@@ -109,10 +110,11 @@ fun IconAlertDialogTextField(
                                         }
                                         TextButton(onClick = {
                                             onOKClick(); openDialog.value = false
-                                        }) {
+                                        }, enabled = text.isNotEmpty()) {
                                             Text(
                                                 text = stringResource(id = R.string.ok),
-                                                color = MaterialTheme.colors.secondary
+                                                //TODO: change color to gray when disabled
+                                                color = MaterialTheme.colors.secondary,
                                             )
                                         }
                                     }
