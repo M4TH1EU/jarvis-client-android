@@ -15,8 +15,10 @@
     <string name="demo_message_2">What\'s the weather like in Paris ?</string>
     <string name="demo_message_3">In Paris it\'s cloudy and the temperature is 10 degrees celsuis</string>
     <string name="permissions_page_this_app_need_the_following_permissions">The following permissions are required for this application to run:</string>
-    <string name="permissions_microphone">Microphone</string>
-    <string name="permissions_microphone_description">Necessary to hear you</string>
+    <string name="permission_microphone">Microphone</string>
+    <string name="permission_microphone_description">Necessary to hear you</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
+    <string name="permission_files">Files</string>
+    <string name="permission_files_description">Necessary to temporarily save audio recordings</string>
 </resources>

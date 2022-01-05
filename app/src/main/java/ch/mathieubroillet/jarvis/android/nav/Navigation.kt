@@ -20,7 +20,7 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 fun Navigation() {
     val navController = rememberNavController()
 
-    val permissions = listOf(android.Manifest.permission.RECORD_AUDIO)
+    val permissions = listOf(android.Manifest.permission.RECORD_AUDIO, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
     val permissionState = rememberMultiplePermissionsState(permissions)
 
 

@@ -18,7 +18,7 @@ import ch.mathieubroillet.jarvis.android.R
 import ch.mathieubroillet.jarvis.android.ui.theme.JarvisComposeTheme
 import ch.mathieubroillet.jarvis.android.ui.theme.productSansFont
 import ch.mathieubroillet.jarvis.android.utils.DefaultBox
-import ch.mathieubroillet.jarvis.android.utils.requestPermission
+import ch.mathieubroillet.jarvis.android.utils.requestPermissionButton
 
 
 @Composable
@@ -57,8 +57,16 @@ fun PermissionsBase(navController: NavController) {
 
         PermissionRow(
             R.drawable.ic_baseline_mic_24,
-            stringResource(id = R.string.permissions_microphone),
-            stringResource(id = R.string.permissions_microphone_description)
+            stringResource(id = R.string.permission_microphone),
+            stringResource(id = R.string.permission_microphone_description),
+            Manifest.permission.RECORD_AUDIO
+        )
+
+        PermissionRow(
+            R.drawable.ic_baseline_folder_open_24,
+            stringResource(id = R.string.permission_files),
+            stringResource(id = R.string.permission_files_description),
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
         )
     }
 }
@@ -67,7 +75,8 @@ fun PermissionsBase(navController: NavController) {
 fun PermissionRow(
     icon: Int = R.drawable.ic_baseline_error_24,
     title: String = "Name",
-    description: String = "Description of the permission"
+    description: String = "Description of the permission",
+    permission: String
 ) {
     Row(
         Modifier
@@ -76,24 +85,27 @@ fun PermissionRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Icon(
-            painter = painterResource(id = icon),
-            contentDescription = "permission icon",
-            modifier = Modifier.size(40.dp)
-        )
-        Column {
-            Text(
-                text = title,
-                fontFamily = productSansFont,
-                fontSize = 18.sp
+        Row(modifier = Modifier.fillMaxWidth(0.75F)) {
+            Icon(
+                painter = painterResource(id = icon),
+                contentDescription = "permission icon",
+                modifier = Modifier.size(40.dp).padding(end = 10.dp)
             )
-            Text(
-                text = description,
-                fontFamily = productSansFont,
-                fontSize = 14.sp
-            )
+            Column {
+                Text(
+                    text = title,
+                    fontFamily = productSansFont,
+                    fontSize = 18.sp
+                )
+                Text(
+                    text = description,
+                    fontFamily = productSansFont,
+                    fontSize = 14.sp,
+                )
+            }
         }
-        requestPermission(permission = Manifest.permission.RECORD_AUDIO)
+
+        requestPermissionButton(permission = permission)
     }
 }
 

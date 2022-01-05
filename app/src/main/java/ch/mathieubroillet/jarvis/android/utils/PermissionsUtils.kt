@@ -13,7 +13,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun requestPermission(permission: String) {
+fun requestPermissionButton(permission: String) {
     val permissionState = rememberPermissionState(permission = permission)
     val context = LocalContext.current
 

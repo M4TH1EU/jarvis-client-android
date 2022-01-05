@@ -14,8 +14,10 @@
     <string name="demo_message_2">Quel temps fait-il à Paris en ce moment ?</string>
     <string name="demo_message_3">A Paris, il fait actuellement 10 degrés et le ciel est nuageux.</string>
     <string name="permissions_page_this_app_need_the_following_permissions">Cette application a besoin des autorisations suivantes pour fonctionner:</string>
-    <string name="permissions_microphone">Microphone</string>
-    <string name="permissions_microphone_description">Nécessaire pour vous entendre</string>
+    <string name="permission_microphone">Microphone</string>
+    <string name="permission_microphone_description">Nécessaire pour vous entendre</string>
     <string name="cancel">Annuler</string>
     <string name="ok">OK</string>
+    <string name="permission_files">Fichiers</string>
+    <string name="permission_files_description">Nécessaire pour stocker temporairement les enregistrements audios</string>
 </resources>
