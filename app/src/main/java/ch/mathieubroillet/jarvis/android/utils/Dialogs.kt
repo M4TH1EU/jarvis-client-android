@@ -5,10 +5,14 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -18,6 +22,7 @@ import ch.mathieubroillet.jarvis.android.R
 import ch.mathieubroillet.jarvis.android.ui.theme.JarvisComposeTheme
 import ch.mathieubroillet.jarvis.android.ui.theme.productSansFont
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun IconAlertDialogTextField(
     buttonIcon: Int = R.drawable.ic_baseline_error_24,
@@ -72,6 +77,7 @@ fun IconAlertDialogTextField(
                                     .fillMaxWidth()
                             ) {
                                 Column {
+                                    val (focusRequester) = FocusRequester.createRefs()
                                     OutlinedTextField(
                                         value = text,
                                         onValueChange = textFieldValue,
@@ -79,8 +85,15 @@ fun IconAlertDialogTextField(
                                         colors = TextFieldDefaults.outlinedTextFieldColors(
                                             focusedBorderColor = MaterialTheme.colors.secondaryVariant,
                                             focusedLabelColor = MaterialTheme.colors.secondary
-                                        )
+                                        ),
+                                        singleLine = true,
+                                        modifier = Modifier.focusRequester(focusRequester)
                                     )
+                                    //Auto-focus on the textfield when opening the dialog which opens the keyboard directly.
+                                    DisposableEffect(Unit) {
+                                        focusRequester.requestFocus()
+                                        onDispose { }
+                                    }
 
                                     Row(
                                         Modifier
