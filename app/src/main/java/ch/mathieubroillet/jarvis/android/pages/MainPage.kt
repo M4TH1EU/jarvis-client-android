@@ -1,7 +1,6 @@
 package ch.mathieubroillet.jarvis.android.pages
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -15,26 +14,35 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import ch.mathieubroillet.jarvis.android.R
+import ch.mathieubroillet.jarvis.android.chat.ConversationUiState
+import ch.mathieubroillet.jarvis.android.chat.Message
+import ch.mathieubroillet.jarvis.android.chat.Messages
 import ch.mathieubroillet.jarvis.android.nav.Screen
 import ch.mathieubroillet.jarvis.android.ui.theme.JarvisComposeTheme
 import ch.mathieubroillet.jarvis.android.ui.theme.productSansFont
 import ch.mathieubroillet.jarvis.android.utils.DefaultBox
 import ch.mathieubroillet.jarvis.android.utils.IconAlertDialogTextField
-import ch.mathieubroillet.jarvis.android.utils.MessageFromJarvis
-import ch.mathieubroillet.jarvis.android.utils.MessageFromUser
 
 
 //Draws the base of the main activity, that includes the 3-dots menu and the "hi text".
 @Composable
-fun Base(navController: NavController) {
+fun Base(navController: NavController, uiState: ConversationUiState) {
 
-    Column(Modifier.padding(bottom = 25.dp).fillMaxWidth()) {
+    Column(
+        Modifier
+            .padding(bottom = 25.dp)
+            .fillMaxWidth()
+    ) {
         Row(Modifier.align(Alignment.End)) {
+            var text by remember { mutableStateOf("") }
 
             IconAlertDialogTextField(
-                R.drawable.ic_baseline_keyboard_24,
-                stringResource(id = R.string.main_page_dialog_ask_me_anything),
-                stringResource(id = R.string.main_page_dialog_type_a_sentence)
+                buttonIcon = R.drawable.ic_baseline_keyboard_24,
+                title = stringResource(id = R.string.main_page_dialog_ask_me_anything),
+                label = stringResource(id = R.string.main_page_dialog_type_a_sentence),
+                text = text,
+                textFieldValue = { text = it },
+                onOKClick = { uiState.addMessage(Message(false, text)); text = "" }
             )
 
             DropDownSettingsMenu(navController)
@@ -98,24 +106,21 @@ fun StartRecordingFAB() {
     }
 }
 
+
 @Composable
-fun DisplayMainPage(navController: NavController) {
+fun DisplayMainPage(navController: NavController, uiState: ConversationUiState) {
     //We create a main box with basic padding to avoid having stuff too close to every side.
     DefaultBox {
 
         // This column regroup the base and all the conversations (everything except the footer)
         Column(Modifier.padding(bottom = 80.dp)) {
-            Base(navController)
 
-            // This column regroup only the conversations and make them scrollable
-            LazyColumn(content = {
-                item {
-                    // Basic interaction stuff for demo
-                    MessageFromJarvis(text = stringResource(id = R.string.demo_message_1))
-                    MessageFromUser(text = stringResource(id = R.string.demo_message_2))
-                    MessageFromJarvis(text = stringResource(id = R.string.demo_message_3))
-                }
-            })
+            Base(navController, uiState)
+
+            Messages(
+                messages = uiState.messages,
+                modifier = Modifier.weight(1f)
+            )
         }
 
         // Finally we add the footer to the bottom center of the main box
@@ -134,6 +139,10 @@ fun DisplayMainPage(navController: NavController) {
 @Composable
 fun MainPagePreview() {
     JarvisComposeTheme {
-        DisplayMainPage(rememberNavController())
+        DisplayMainPage(
+            rememberNavController(), ConversationUiState(
+                listOf(Message(true, stringResource(id = R.string.demo_message_1)))
+            )
+        )
     }
 }

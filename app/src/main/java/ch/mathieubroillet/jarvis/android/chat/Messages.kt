@@ -1,9 +1,10 @@
-package ch.mathieubroillet.jarvis.android.utils
+package ch.mathieubroillet.jarvis.android.chat
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -16,6 +17,30 @@ import androidx.compose.ui.unit.dp
 import ch.mathieubroillet.jarvis.android.R
 import ch.mathieubroillet.jarvis.android.ui.theme.productSansFont
 
+@Composable
+fun Messages(
+    messages: List<Message>,
+    modifier: Modifier = Modifier
+) {
+    Box(modifier = modifier) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            val reverse: List<Message> = messages.reversed()
+
+            for (message in reverse) {
+                item {
+                    if (message.isJarvis) {
+                        MessageFromJarvis(text = message.content)
+                    } else {
+                        MessageFromUser(text = message.content)
+                    }
+                }
+            }
+        }
+    }
+}
 
 @Composable
 fun MessageFromJarvis(
@@ -95,7 +120,7 @@ fun MessageFromUser(text: String) {
                 .fillMaxWidth(fraction = 0.8F)
                 .clip(RoundedCornerShape(15.dp))
                 .background(color = MaterialTheme.colors.secondary)
-                .padding(horizontal = 10.dp, vertical = 5.dp)
+                .padding(horizontal = 10.dp, vertical = 10.dp)
         ) {
             Text(
                 text = text,

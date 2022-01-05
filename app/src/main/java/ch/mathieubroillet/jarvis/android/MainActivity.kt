@@ -9,14 +9,10 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.navigation.compose.rememberNavController
 import ch.mathieubroillet.jarvis.android.nav.Navigation
-import ch.mathieubroillet.jarvis.android.pages.DisplayMainPage
 import ch.mathieubroillet.jarvis.android.ui.theme.JarvisComposeTheme
 
 
@@ -50,14 +46,5 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    JarvisComposeTheme {
-        DisplayMainPage(rememberNavController())
     }
 }

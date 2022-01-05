@@ -1,10 +1,14 @@
 package ch.mathieubroillet.jarvis.android.nav
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import ch.mathieubroillet.jarvis.android.R
+import ch.mathieubroillet.jarvis.android.chat.ConversationUiState
+import ch.mathieubroillet.jarvis.android.chat.Message
 import ch.mathieubroillet.jarvis.android.pages.DisplayMainPage
 import ch.mathieubroillet.jarvis.android.pages.DisplayPermissionsPage
 import ch.mathieubroillet.jarvis.android.pages.DisplaySettingsPage
@@ -39,7 +43,17 @@ fun Navigation() {
 
 @Composable
 fun MainScreen(navController: NavController) {
-    DisplayMainPage(navController)
+    DisplayMainPage(
+        navController,
+        ConversationUiState(
+            listOf(
+                Message(
+                    true,
+                    stringResource(id = R.string.demo_message_1)
+                )
+            )
+        )
+    )
 }
 
 @Composable

@@ -4,13 +4,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ch.mathieubroillet.jarvis.android.R
@@ -21,7 +22,10 @@ import ch.mathieubroillet.jarvis.android.ui.theme.productSansFont
 fun IconAlertDialogTextField(
     buttonIcon: Int = R.drawable.ic_baseline_error_24,
     title: String = "Title",
-    label: String = "Label"
+    label: String = "Label",
+    text: String,
+    textFieldValue: (String) -> Unit,
+    onOKClick: () -> Unit
 ) {
     JarvisComposeTheme {
         Column {
@@ -68,12 +72,9 @@ fun IconAlertDialogTextField(
                                     .fillMaxWidth()
                             ) {
                                 Column {
-                                    var text by remember { mutableStateOf(TextFieldValue("")) }
                                     OutlinedTextField(
                                         value = text,
-                                        onValueChange = { newText ->
-                                            text = newText
-                                        },
+                                        onValueChange = textFieldValue,
                                         label = { Text(text = label) },
                                         colors = TextFieldDefaults.outlinedTextFieldColors(
                                             focusedBorderColor = MaterialTheme.colors.secondaryVariant,
@@ -93,7 +94,9 @@ fun IconAlertDialogTextField(
                                                 color = MaterialTheme.colors.secondary
                                             )
                                         }
-                                        TextButton(onClick = { /*TODO*/ }) {
+                                        TextButton(onClick = {
+                                            onOKClick(); openDialog.value = false
+                                        }) {
                                             Text(
                                                 text = stringResource(id = R.string.ok),
                                                 color = MaterialTheme.colors.secondary
@@ -101,8 +104,6 @@ fun IconAlertDialogTextField(
                                         }
                                     }
                                 }
-
-
                             }
                         }
                     },
