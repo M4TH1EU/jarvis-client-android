@@ -5,6 +5,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -14,6 +15,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import ch.mathieubroillet.jarvis.android.R
+import ch.mathieubroillet.jarvis.android.audio.*
 import ch.mathieubroillet.jarvis.android.chat.ConversationUiState
 import ch.mathieubroillet.jarvis.android.chat.Message
 import ch.mathieubroillet.jarvis.android.chat.Messages
@@ -22,6 +24,7 @@ import ch.mathieubroillet.jarvis.android.ui.theme.JarvisComposeTheme
 import ch.mathieubroillet.jarvis.android.ui.theme.productSansFont
 import ch.mathieubroillet.jarvis.android.utils.DefaultBox
 import ch.mathieubroillet.jarvis.android.utils.IconAlertDialogTextField
+import com.github.squti.androidwaverecorder.WaveRecorder
 
 
 //Draws the base of the main activity, that includes the 3-dots menu and the "hi text".
@@ -96,10 +99,15 @@ fun StartRecordingFAB() {
         verticalAlignment = Alignment.Bottom,
         horizontalArrangement = Arrangement.Center
     ) {
+        var isRecording by remember { mutableStateOf(isRecording()) }
+
+
         //Microphone floating button to manually start/stop listening
-        FloatingActionButton(onClick = { /*TODO*/ }, modifier = Modifier.size(70.dp)) {
+        FloatingActionButton(onClick = {
+            if (isRecording) stopRecording() else startRecording()
+        }, modifier = Modifier.size(70.dp)) {
             Icon(
-                painter = painterResource(id = R.drawable.ic_baseline_mic_24),
+                painter = painterResource(id = if (isRecording) R.drawable.ic_baseline_shield_24 else R.drawable.ic_baseline_mic_24),
                 contentDescription = "microphone"
             )
         }
@@ -109,6 +117,9 @@ fun StartRecordingFAB() {
 
 @Composable
 fun DisplayMainPage(navController: NavController, uiState: ConversationUiState) {
+
+    registerRecorder(LocalContext.current)
+
     //We create a main box with basic padding to avoid having stuff too close to every side.
     DefaultBox {
 
