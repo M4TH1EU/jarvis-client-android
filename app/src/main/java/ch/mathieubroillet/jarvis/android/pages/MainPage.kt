@@ -5,26 +5,25 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import ch.mathieubroillet.jarvis.android.R
-import ch.mathieubroillet.jarvis.android.audio.*
+import ch.mathieubroillet.jarvis.android.audio.AudioRecorder
 import ch.mathieubroillet.jarvis.android.chat.ConversationUiState
 import ch.mathieubroillet.jarvis.android.chat.Message
 import ch.mathieubroillet.jarvis.android.chat.Messages
 import ch.mathieubroillet.jarvis.android.nav.Screen
-import ch.mathieubroillet.jarvis.android.ui.theme.JarvisComposeTheme
 import ch.mathieubroillet.jarvis.android.ui.theme.productSansFont
 import ch.mathieubroillet.jarvis.android.utils.DefaultBox
 import ch.mathieubroillet.jarvis.android.utils.IconAlertDialogTextField
-import com.github.squti.androidwaverecorder.WaveRecorder
+import ch.mathieubroillet.jarvis.android.utils.contactServerWithFileAudioRecording
+import com.github.squti.androidwaverecorder.RecorderState
+import org.json.JSONObject
+import kotlin.concurrent.thread
 
 
 //Draws the base of the main activity, that includes the 3-dots menu and the "hi text".
@@ -91,7 +90,7 @@ fun DropDownSettingsMenu(navController: NavController) {
 }
 
 @Composable
-fun StartRecordingFAB() {
+fun StartRecordingFAB(onClick: () -> Unit, isRecording: Boolean) {
     //We create a row that we align to the bottom center of the parent box
     Row(
         Modifier
@@ -99,13 +98,9 @@ fun StartRecordingFAB() {
         verticalAlignment = Alignment.Bottom,
         horizontalArrangement = Arrangement.Center
     ) {
-        var isRecording by remember { mutableStateOf(isRecording()) }
-
 
         //Microphone floating button to manually start/stop listening
-        FloatingActionButton(onClick = {
-            if (isRecording) stopRecording() else startRecording()
-        }, modifier = Modifier.size(70.dp)) {
+        FloatingActionButton(onClick = onClick, modifier = Modifier.size(70.dp)) {
             Icon(
                 painter = painterResource(id = if (isRecording) R.drawable.ic_baseline_shield_24 else R.drawable.ic_baseline_mic_24),
                 contentDescription = "microphone"
@@ -116,9 +111,12 @@ fun StartRecordingFAB() {
 
 
 @Composable
-fun DisplayMainPage(navController: NavController, uiState: ConversationUiState) {
+fun DisplayMainPage(
+    navController: NavController,
+    uiState: ConversationUiState,
+    audioRecorder: AudioRecorder
+) {
 
-    registerRecorder(LocalContext.current)
 
     //We create a main box with basic padding to avoid having stuff too close to every side.
     DefaultBox {
@@ -140,20 +138,48 @@ fun DisplayMainPage(navController: NavController, uiState: ConversationUiState) 
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 40.dp)
         ) {
-            StartRecordingFAB()
+            var listening: Boolean by remember { mutableStateOf(false) }
+
+            audioRecorder.waveRecorder.onStateChangeListener = {
+                when (it) {
+                    RecorderState.RECORDING -> listening = true
+                    RecorderState.STOP -> {
+                        listening = false
+
+                        thread {
+                            val requestOutput =
+                                contactServerWithFileAudioRecording(audioRecorder.getOutputFile())
+
+                            val json: JSONObject = JSONObject(requestOutput)
+                            val sent = JSONObject(requestOutput).getString("sent").replace("\"", "")
+                                .replace("[", "").replace("]", "").replace(",", " ")
+                            sent.replaceFirstChar { sent.first().uppercase() }
+                            uiState.addMessage(Message(false, sent))
+                            Thread.sleep(1000)
+                            uiState.addMessage(Message(true, json.getString("response")))
+                            audioRecorder.getOutputFile().delete()
+                        }
+                    }
+                    else -> {}
+                }
+            }
+
+            StartRecordingFAB(
+                onClick = { if (listening) audioRecorder.stopRecording() else audioRecorder.startRecording() },
+                isRecording = listening
+            )
         }
     }
 }
 
-
-@Preview(showBackground = true)
+/*@Preview(showBackground = true)
 @Composable
 fun MainPagePreview() {
     JarvisComposeTheme {
         DisplayMainPage(
             rememberNavController(), ConversationUiState(
                 listOf(Message(true, stringResource(id = R.string.demo_message_1)))
-            )
+            ), null
         )
     }
-}
+}*/

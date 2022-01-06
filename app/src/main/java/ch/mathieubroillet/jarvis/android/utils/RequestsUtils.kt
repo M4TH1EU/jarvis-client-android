@@ -7,7 +7,7 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import java.io.IOException
 
-fun contactServerWithFileAudioRecording(file: File) {
+fun contactServerWithFileAudioRecording(file: File): String {
     val client = OkHttpClient()
 
     val request = Request.Builder()
@@ -17,7 +17,6 @@ fun contactServerWithFileAudioRecording(file: File) {
 
     client.newCall(request).execute().use { response ->
         if (!response.isSuccessful) throw IOException("Unexpected code $response")
-
-        println(response.body!!.string())
+        return response.body!!.string()
     }
 }
