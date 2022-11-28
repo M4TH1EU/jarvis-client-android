@@ -7,21 +7,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import ch.mathieubroillet.jarvis.android.R
 import ch.mathieubroillet.jarvis.android.audio.AudioRecorder
 import ch.mathieubroillet.jarvis.android.chat.ConversationUiState
 import ch.mathieubroillet.jarvis.android.chat.Message
 import ch.mathieubroillet.jarvis.android.chat.Messages
 import ch.mathieubroillet.jarvis.android.nav.Screen
+import ch.mathieubroillet.jarvis.android.ui.theme.JarvisComposeTheme
 import ch.mathieubroillet.jarvis.android.ui.theme.productSansFont
 import ch.mathieubroillet.jarvis.android.utils.DefaultBox
 import ch.mathieubroillet.jarvis.android.utils.IconAlertDialogTextField
 import ch.mathieubroillet.jarvis.android.utils.contactServerWithFileAudioRecording
 import com.github.squti.androidwaverecorder.RecorderState
+import com.github.squti.androidwaverecorder.WaveRecorder
 import org.json.JSONObject
 import kotlin.concurrent.thread
 
@@ -150,13 +154,12 @@ fun DisplayMainPage(
                             val requestOutput =
                                 contactServerWithFileAudioRecording(audioRecorder.getOutputFile())
 
-                            val json: JSONObject = JSONObject(requestOutput)
-                            val sent = JSONObject(requestOutput).getString("sent").replace("\"", "")
-                                .replace("[", "").replace("]", "").replace(",", " ")
-                            sent.replaceFirstChar { sent.first().uppercase() }
+                            val json = JSONObject(requestOutput)
+                            val sent = json.getString("transcription")
+
                             uiState.addMessage(Message(false, sent))
                             Thread.sleep(1000)
-                            uiState.addMessage(Message(true, json.getString("response")))
+                            uiState.addMessage(Message(true, json.getString("answer")))
                             audioRecorder.getOutputFile().delete()
                         }
                     }
@@ -172,14 +175,14 @@ fun DisplayMainPage(
     }
 }
 
-/*@Preview(showBackground = true)
+@Preview(showBackground = true)
 @Composable
 fun MainPagePreview() {
     JarvisComposeTheme {
         DisplayMainPage(
             rememberNavController(), ConversationUiState(
                 listOf(Message(true, stringResource(id = R.string.demo_message_1)))
-            ), null
+            ), audioRecorder = AudioRecorder("", WaveRecorder(""))
         )
     }
-}*/
+}
