@@ -1,11 +1,9 @@
 package ch.mathieubroillet.jarvis.android.utils
 
-import okhttp3.Headers
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.internal.http1.HeadersReader
 import java.io.File
 import java.io.IOException
 
@@ -13,7 +11,7 @@ fun contactServerWithFileAudioRecording(file: File): String {
     val client = OkHttpClient()
 
     val request = Request.Builder()
-        .url("https://whisper.broillet.ch/process_audio_request_file")
+        .url("https://jarvis-server.broillet.ch/process_audio_request_file")
         .post(file.asRequestBody("audio/x-wav; charset=utf-8".toMediaType()))
         .build()
 
