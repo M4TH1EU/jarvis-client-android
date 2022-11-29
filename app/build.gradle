@@ -1,15 +1,16 @@
 plugins {
     id 'com.android.application'
-    id 'kotlin-android'
+    id 'org.jetbrains.kotlin.android'
 }
 
 android {
-    compileSdk 32
+    namespace 'ch.broillet.jarvis.android'
+    compileSdk 33
 
     defaultConfig {
-        applicationId "ch.mathieubroillet.jarvis.android"
-        minSdk 29
-        targetSdk 32
+        applicationId "ch.broillet.jarvis.android"
+        minSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -31,14 +32,12 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
-        useIR = true
     }
     buildFeatures {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion compose_version
-        kotlinCompilerVersion '1.5.21'
+        kotlinCompilerExtensionVersion '1.1.1'
     }
     packagingOptions {
         resources {
@@ -49,20 +48,25 @@ android {
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.4.0'
-    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
+    implementation 'androidx.activity:activity-compose:1.6.1'
     implementation "androidx.compose.ui:ui:$compose_version"
-    implementation "androidx.compose.material:material:$compose_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
-    implementation "androidx.navigation:navigation-compose:2.4.0-rc01"
+    implementation 'androidx.compose.material3:material3:1.1.0-alpha02'
+    implementation 'com.google.android.material:material:1.7.0'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.4'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
+    debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
+    debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
+
+    implementation "androidx.navigation:navigation-compose:2.6.0-alpha04"
     implementation 'com.google.accompanist:accompanist-permissions:0.22.0-rc'
     implementation 'com.google.accompanist:accompanist-insets:0.22.0-rc'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
-    implementation 'com.github.squti:Android-Wave-Recorder:1.6.0'
+
+    implementation 'com.github.squti:Android-Wave-Recorder:1.7.0'
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
     implementation 'com.google.code.gson:gson:2.8.9'
-    implementation 'androidx.activity:activity-compose:1.4.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-    debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
 }
