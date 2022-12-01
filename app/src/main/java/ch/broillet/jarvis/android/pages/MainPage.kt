@@ -179,8 +179,8 @@ fun DisplayMainPage(
                             val sent = json.getString("transcription")
 
                             uiState.addMessage(Message(false, sent))
-                            Thread.sleep(1000)
-                            uiState.addMessage(Message(true, json.getString("answer")))
+                            // Thread.sleep(1000)
+                            // uiState.addMessage(Message(true, json.getString("answer")))
                             audioRecorder.getOutputFile().delete()
                         }
                     }

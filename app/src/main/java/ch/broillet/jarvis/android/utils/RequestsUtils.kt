@@ -11,7 +11,7 @@ fun contactServerWithFileAudioRecording(file: File): String {
     val client = OkHttpClient()
 
     val request = Request.Builder()
-        .url("https://jarvis-server.broillet.ch/process_audio_request_file")
+        .url("https://jarvis-server.broillet.ch/process_voice")
         .post(file.asRequestBody("audio/x-wav; charset=utf-8".toMediaType()))
         .build()
 
