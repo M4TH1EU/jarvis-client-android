@@ -177,11 +177,11 @@ fun DisplayMainPage(
                         SocketHandler.processMessage("test", MainActivity().uniqueID)
 
                         thread {
-                            //val requestOutput = getTextFromAudio(audioRecorder.getOutputFile())
+                            val requestOutput = getTextFromAudio(audioRecorder.getOutputFile())
 
-                            val temp = JSONObject()
+                            /*val temp = JSONObject()
                             temp.put("data", "salut je suis bob")
-                            val requestOutput = temp.toString()
+                            val requestOutput = temp.toString()*/
 
                             processing = false
 

@@ -37,11 +37,13 @@ object SocketHandler {
         val body = JSONObject()
         body.put("data", message)
         body.put("uuid", uuid)
-        getSocket().emit("process_message", body)
+        getSocket().emit("process_message", body.toString())
     }
 
     @Synchronized
     fun joinRoom(uuid: String) {
-        getSocket().emit("join", uuid)
+        val body = JSONObject()
+        body.put("uuid", uuid)
+        getSocket().emit("join", body.toString())
     }
 }
