@@ -13,10 +13,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
 import ch.broillet.jarvis.android.nav.Navigation
 import ch.broillet.jarvis.android.ui.theme.JarvisclientappTheme
+import ch.broillet.jarvis.android.utils.SocketHandler
+import java.util.*
+
 
 class MainActivity : ComponentActivity() {
+    var uniqueID = UUID.randomUUID().toString()
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        // The following lines connects the Android app to the server.
+        SocketHandler.setSocket()
+        SocketHandler.establishConnection()
+        SocketHandler.joinRoom(uniqueID)
+
         super.onCreate(savedInstanceState)
+
 
         setContent {
             JarvisclientappTheme {
@@ -30,8 +42,7 @@ class MainActivity : ComponentActivity() {
 
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
                     DefaultPreview()
                 }

@@ -6,12 +6,14 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import java.io.IOException
+import java.net.Socket
 
-fun contactServerWithFileAudioRecording(file: File): String {
+
+fun getTextFromAudio(file: File): String {
     val client = OkHttpClient()
 
     val request = Request.Builder()
-        .url("https://jarvis-server.broillet.ch/process_voice")
+        .url("https://jarvis-server.broillet.ch/get_text_from_audio")
         .post(file.asRequestBody("audio/x-wav; charset=utf-8".toMediaType()))
         .build()
 

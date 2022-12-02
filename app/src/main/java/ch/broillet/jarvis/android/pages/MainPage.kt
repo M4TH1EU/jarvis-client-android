@@ -1,5 +1,6 @@
 package ch.broillet.jarvis.android.pages
 
+import android.os.Looper
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Edit
@@ -17,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import ch.broillet.jarvis.android.MainActivity
 import ch.broillet.jarvis.android.R
 import ch.broillet.jarvis.android.audio.AudioRecorder
 import ch.broillet.jarvis.android.chat.ConversationUiState
@@ -25,10 +27,7 @@ import ch.broillet.jarvis.android.chat.Messages
 import ch.broillet.jarvis.android.nav.Screen
 import ch.broillet.jarvis.android.ui.theme.JarvisclientappTheme
 import ch.broillet.jarvis.android.ui.theme.productSansFont
-import ch.broillet.jarvis.android.utils.DefaultBox
-import ch.broillet.jarvis.android.utils.DotsFlashing
-import ch.broillet.jarvis.android.utils.DotsTyping
-import ch.broillet.jarvis.android.utils.contactServerWithFileAudioRecording
+import ch.broillet.jarvis.android.utils.*
 import com.github.squti.androidwaverecorder.RecorderState
 import com.github.squti.androidwaverecorder.WaveRecorder
 import org.json.JSONObject
@@ -37,7 +36,7 @@ import kotlin.concurrent.thread
 
 //Draws the base of the main activity, that includes the 3-dots menu and the "hi text".
 @Composable
-fun Base(navController: NavController, uiState: ConversationUiState) {
+fun Base(navController: NavController) {
 
     Column(
         Modifier
@@ -146,7 +145,7 @@ fun DisplayMainPage(
         // This column regroup the base and all the conversations (everything except the footer)
         Column(Modifier.padding(bottom = 80.dp)) {
 
-            Base(navController, uiState)
+            Base(navController)
 
             Messages(
                 messages = uiState.messages,
@@ -163,22 +162,34 @@ fun DisplayMainPage(
             var listening: Boolean by remember { mutableStateOf(false) }
             var processing: Boolean by remember { mutableStateOf(false) }
 
+            SocketHandler.getSocket().on("message_from_jarvis") { args ->
+                if (args[0] != null) {
+                    uiState.addMessage(Message(true, args.toString()))
+                }
+            }
             audioRecorder.waveRecorder.onStateChangeListener = {
                 when (it) {
                     RecorderState.RECORDING -> listening = true
                     RecorderState.STOP -> {
                         listening = false
                         processing = true
+
+                        SocketHandler.processMessage("test", MainActivity().uniqueID)
+
                         thread {
-                            val requestOutput =
-                                contactServerWithFileAudioRecording(audioRecorder.getOutputFile())
+                            //val requestOutput = getTextFromAudio(audioRecorder.getOutputFile())
+
+                            val temp = JSONObject()
+                            temp.put("data", "salut je suis bob")
+                            val requestOutput = temp.toString()
 
                             processing = false
 
                             val json = JSONObject(requestOutput)
-                            val sent = json.getString("transcription")
+                            val sent = json.getString("data")
 
                             uiState.addMessage(Message(false, sent))
+
                             // Thread.sleep(1000)
                             // uiState.addMessage(Message(true, json.getString("answer")))
                             audioRecorder.getOutputFile().delete()
@@ -191,7 +202,7 @@ fun DisplayMainPage(
             StartRecordingFAB(
                 onClick = { if (listening) audioRecorder.stopRecording() else audioRecorder.startRecording() },
                 isRecording = listening,
-                isProcessing =  processing
+                isProcessing = processing
             )
         }
     }
