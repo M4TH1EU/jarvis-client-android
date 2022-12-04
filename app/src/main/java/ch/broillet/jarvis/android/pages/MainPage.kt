@@ -208,6 +208,8 @@ fun processAudio(audioFile: File): String {
 }
 
 fun processMessage(text: String, navController: NavController, uiState: ConversationUiState) {
+    uiState.addMessage(Message(false, text))
+
     navController.context.mainExecutor.execute {
         SocketHandler.processMessage(
             text,
@@ -217,8 +219,6 @@ fun processMessage(text: String, navController: NavController, uiState: Conversa
             )
         )
     }
-
-    uiState.addMessage(Message(false, text))
 }
 
 

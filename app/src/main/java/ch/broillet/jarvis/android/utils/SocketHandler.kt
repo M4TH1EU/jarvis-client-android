@@ -57,4 +57,12 @@ object SocketHandler {
         }
 
     }
+
+    fun messageFromUser(data: Array<Any>, uiState: ConversationUiState) {
+        if (data[0].toString().contains("data")) {
+            val result: JSONObject = data[0] as JSONObject
+            uiState.addMessage(Message(false, result.getString("data")))
+        }
+
+    }
 }

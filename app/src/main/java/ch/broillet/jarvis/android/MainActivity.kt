@@ -45,6 +45,8 @@ class MainActivity : ComponentActivity() {
 
         SocketHandler.getSocket()
             .on("message_from_jarvis") { SocketHandler.messageFromJarvis(it, uiState) }
+        SocketHandler.getSocket()
+            .on("message_from_user") { SocketHandler.messageFromUser(it, uiState) }
 
         super.onCreate(savedInstanceState)
 
