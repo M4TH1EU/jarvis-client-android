@@ -1,6 +1,6 @@
 package ch.broillet.jarvis.android.pages
 
-import android.os.Looper
+import android.provider.Settings.Secure
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Edit
@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import ch.broillet.jarvis.android.MainActivity
 import ch.broillet.jarvis.android.R
 import ch.broillet.jarvis.android.audio.AudioRecorder
 import ch.broillet.jarvis.android.chat.ConversationUiState
@@ -31,12 +30,50 @@ import ch.broillet.jarvis.android.utils.*
 import com.github.squti.androidwaverecorder.RecorderState
 import com.github.squti.androidwaverecorder.WaveRecorder
 import org.json.JSONObject
+import java.io.File
 import kotlin.concurrent.thread
 
 
+@Composable
+fun DisplayMainPage(
+    navController: NavController,
+    uiState: ConversationUiState,
+    audioRecorder: AudioRecorder
+) {
+
+    //We create a main box with basic padding to avoid having stuff too close to every side.
+    DefaultBox {
+
+        // This column regroup the base and all the conversations (everything except the footer)
+        Column(Modifier.padding(bottom = 80.dp)) {
+
+            MainBase(navController)
+
+            Messages(
+                messages = uiState.messages,
+                modifier = Modifier.weight(1f)
+            )
+        }
+
+        // Finally we add the footer to the bottom center of the main box
+        Column(
+            Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 40.dp)
+        ) {
+
+            RecordingFooterButton(
+                audioRecorder = audioRecorder,
+                navController = navController,
+                uiState = uiState
+            )
+        }
+    }
+}
+
 //Draws the base of the main activity, that includes the 3-dots menu and the "hi text".
 @Composable
-fun Base(navController: NavController) {
+fun MainBase(navController: NavController) {
 
     Column(
         Modifier
@@ -103,7 +140,38 @@ fun DropDownSettingsMenu(navController: NavController) {
 }
 
 @Composable
-fun StartRecordingFAB(onClick: () -> Unit, isRecording: Boolean, isProcessing: Boolean) {
+fun RecordingFooterButton(
+    audioRecorder: AudioRecorder,
+    navController: NavController,
+    uiState: ConversationUiState
+) {
+
+    var isListening: Boolean by remember { mutableStateOf(false) }
+    var isProcessing: Boolean by remember { mutableStateOf(false) }
+
+    // Add a listener for the waveRecorder to record when isListening is true and then process the audio when done listening
+    audioRecorder.waveRecorder.onStateChangeListener = {
+        when (it) {
+            RecorderState.RECORDING -> isListening = true
+            RecorderState.STOP -> {
+                thread {
+                    isListening = false
+                    isProcessing = true
+
+                    processMessage(
+                        processAudio(audioRecorder.getOutputFile()),
+                        navController,
+                        uiState
+                    )
+
+                    isProcessing = false
+                    audioRecorder.getOutputFile().delete()
+                }
+            }
+            else -> {}
+        }
+    }
+
     //We create a row that we align to the bottom center of the parent box
     Row(
         Modifier
@@ -113,8 +181,11 @@ fun StartRecordingFAB(onClick: () -> Unit, isRecording: Boolean, isProcessing: B
     ) {
 
         //Microphone floating button to manually start/stop listening
-        FloatingActionButton(onClick = onClick, modifier = Modifier.size(70.dp)) {
-            if (isRecording) {
+        FloatingActionButton(
+            onClick = { if (isListening) audioRecorder.stopRecording() else audioRecorder.startRecording() },
+            modifier = Modifier.size(70.dp)
+        ) {
+            if (isListening) {
                 DotsTyping(7.dp, 3, 300, MaterialTheme.colorScheme.secondary, 2.dp)
             } else {
                 if (isProcessing) {
@@ -130,83 +201,26 @@ fun StartRecordingFAB(onClick: () -> Unit, isRecording: Boolean, isProcessing: B
     }
 }
 
+fun processAudio(audioFile: File): String {
+    val json = JSONObject(getTextFromAudio(audioFile))
 
-@Composable
-fun DisplayMainPage(
-    navController: NavController,
-    uiState: ConversationUiState,
-    audioRecorder: AudioRecorder
-) {
-
-
-    //We create a main box with basic padding to avoid having stuff too close to every side.
-    DefaultBox {
-
-        // This column regroup the base and all the conversations (everything except the footer)
-        Column(Modifier.padding(bottom = 80.dp)) {
-
-            Base(navController)
-
-            Messages(
-                messages = uiState.messages,
-                modifier = Modifier.weight(1f)
-            )
-        }
-
-        // Finally we add the footer to the bottom center of the main box
-        Column(
-            Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 40.dp)
-        ) {
-            var listening: Boolean by remember { mutableStateOf(false) }
-            var processing: Boolean by remember { mutableStateOf(false) }
-
-            SocketHandler.getSocket().on("message_from_jarvis") { args ->
-                if (args[0] != null) {
-                    uiState.addMessage(Message(true, args.toString()))
-                }
-            }
-            audioRecorder.waveRecorder.onStateChangeListener = {
-                when (it) {
-                    RecorderState.RECORDING -> listening = true
-                    RecorderState.STOP -> {
-                        listening = false
-                        processing = true
-
-                        SocketHandler.processMessage("test", MainActivity().uniqueID)
-
-                        thread {
-                            val requestOutput = getTextFromAudio(audioRecorder.getOutputFile())
-
-                            /*val temp = JSONObject()
-                            temp.put("data", "salut je suis bob")
-                            val requestOutput = temp.toString()*/
-
-                            processing = false
-
-                            val json = JSONObject(requestOutput)
-                            val sent = json.getString("data")
-
-                            uiState.addMessage(Message(false, sent))
-
-                            // Thread.sleep(1000)
-                            // uiState.addMessage(Message(true, json.getString("answer")))
-                            audioRecorder.getOutputFile().delete()
-                        }
-                    }
-                    else -> {}
-                }
-            }
-
-            StartRecordingFAB(
-                onClick = { if (listening) audioRecorder.stopRecording() else audioRecorder.startRecording() },
-                isRecording = listening,
-                isProcessing = processing
-            )
-        }
-    }
+    return json.getString("data")
 }
+
+fun processMessage(text: String, navController: NavController, uiState: ConversationUiState) {
+    navController.context.mainExecutor.execute {
+        SocketHandler.processMessage(
+            text,
+            Secure.getString(
+                navController.context.contentResolver,
+                Secure.ANDROID_ID
+            )
+        )
+    }
+
+    uiState.addMessage(Message(false, text))
+}
+
 
 @Preview(showBackground = true)
 @Composable

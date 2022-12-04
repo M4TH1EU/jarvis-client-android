@@ -1,5 +1,7 @@
 package ch.broillet.jarvis.android.utils
 
+import ch.broillet.jarvis.android.chat.ConversationUiState
+import ch.broillet.jarvis.android.chat.Message
 import io.socket.client.IO
 import io.socket.client.Socket
 import org.json.JSONObject
@@ -45,5 +47,14 @@ object SocketHandler {
         val body = JSONObject()
         body.put("uuid", uuid)
         getSocket().emit("join", body.toString())
+    }
+
+
+    fun messageFromJarvis(data: Array<Any>, uiState: ConversationUiState) {
+        if (data[0].toString().contains("data")) {
+            val result: JSONObject = data[0] as JSONObject
+            uiState.addMessage(Message(true, result.getString("data")))
+        }
+
     }
 }

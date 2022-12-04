@@ -26,6 +26,7 @@ fun DefaultBox(
 
 }
 
+// Open the application in the system's settings to (i.e) manually give permission
 fun openAppSettings(context: Context) {
     context.startActivity(
         Intent(

@@ -10,15 +10,12 @@ class AudioRecorder(
     var waveRecorder: WaveRecorder
 ) {
 
-
     fun startRecording() {
         waveRecorder.startRecording()
     }
 
     fun stopRecording() {
         waveRecorder.stopRecording()
-
-
     }
 
     fun getOutputFile(): File {

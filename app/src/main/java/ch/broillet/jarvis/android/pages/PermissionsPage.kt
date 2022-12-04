@@ -2,11 +2,12 @@ package ch.broillet.jarvis.android.pages
 
 import android.Manifest
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -18,7 +19,10 @@ import ch.broillet.jarvis.android.R
 import ch.broillet.jarvis.android.ui.theme.JarvisclientappTheme
 import ch.broillet.jarvis.android.ui.theme.productSansFont
 import ch.broillet.jarvis.android.utils.DefaultBox
-import ch.broillet.jarvis.android.utils.requestPermissionButton
+import ch.broillet.jarvis.android.utils.openAppSettings
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionRequired
+import com.google.accompanist.permissions.rememberPermissionState
 
 @Composable
 fun DisplayPermissionsPage(navController: NavController) {
@@ -54,19 +58,13 @@ fun PermissionsBase() {
             modifier = Modifier.padding(top = 10.dp)
         )
 
+        // List of required permissions to display
         PermissionRow(
             R.drawable.ic_baseline_mic_24,
             stringResource(id = R.string.permission_microphone),
             stringResource(id = R.string.permission_microphone_description),
             Manifest.permission.RECORD_AUDIO
         )
-
-        /*PermissionRow(
-            R.drawable.ic_baseline_folder_open_24,
-            stringResource(id = R.string.permission_files),
-            stringResource(id = R.string.permission_files_description),
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )*/
     }
 }
 
@@ -106,8 +104,48 @@ fun PermissionRow(
             }
         }
 
-        requestPermissionButton(permission = permission)
+        // Remove preview error (only in IDE, has no impact on app)
+        if (!LocalInspectionMode.current) {
+            PermissionRequestButton(permission = permission)
+        }
     }
+}
+
+
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun PermissionRequestButton(permission: String) {
+    val permissionState = rememberPermissionState(permission = permission)
+    val context = LocalContext.current
+
+    PermissionRequired(
+        permissionState = permissionState,
+        permissionNotGrantedContent = {
+            Button(onClick = {
+                permissionState.launchPermissionRequest()
+            }) {
+                Text(text = stringResource(id = R.string.permissions_page_grant_permission))
+            }
+
+        },
+        permissionNotAvailableContent = {
+            Button(
+                onClick = { openAppSettings(context) },
+                colors = ButtonDefaults.buttonColors(contentColor = MaterialTheme.colorScheme.error)
+            ) {
+                Text(text = stringResource(id = R.string.permissions_page_permission_denied))
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_outline_settings_24),
+                    contentDescription = "app settings icon"
+                )
+            }
+        },
+        content = {
+            Button(onClick = {}, enabled = false) {
+                Text(text = stringResource(id = R.string.permission_granted))
+            }
+        }
+    )
 }
 
 @Preview(showBackground = true)

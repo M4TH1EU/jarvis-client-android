@@ -6,7 +6,6 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import java.io.IOException
-import java.net.Socket
 
 
 fun getTextFromAudio(file: File): String {
